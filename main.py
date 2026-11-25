@@ -41,6 +41,12 @@ def main():
 
     if src_head != PNG_MAGIC or dst_head != PNG_MAGIC:
         fail("entry.png is not a PNG file")
+    with open(dest, "rb") as f:
+        header = f.read(33)
+    width = int.from_bytes(header[16:20], "big")
+    height = int.from_bytes(header[20:24], "big")
+    if (width, height) != (1024, 1024):
+        fail("entry.png is %dx%d, expected 1024x1024" % (width, height))
     if src_size != dst_size:
         fail("copied entry.png size differs from source")
     if dst_size > MAX_BYTES:
